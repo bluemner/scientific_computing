@@ -72,24 +72,25 @@ int main(int argc, char * argv[]){
 
 	#pragma region Linar_System
 	{
-		// std::cout << "______________________________________"<<std::endl;
-		// std::cout <<"linar_system"<<std::endl;
-		// std::cout << "______________________________________"<<std::endl;
-		// double A[3][3] ={
-		// 				{2.0,4.0,-2.0},
-		// 				{0.0,1.0,1.0}, 
-		// 				{0.0,0.0,4.0} 
-		// 			};
-		// double x[3]={1.0,1.0,1.0};
-		// double b[3]={2.0,4.0,8.0};
+		std::cout << "______________________________________"<<std::endl;
+		std::cout <<"linar_system"<<std::endl;
+		std::cout << "______________________________________"<<std::endl;
+		double A[3][3] ={
+						{2.0,4.0,-2.0},
+						{0.0,1.0,1.0}, 
+						{0.0,0.0,4.0} 
+					};
+		double x[3]={1.0,1.0,1.0};
+		double b[3]={2.0,4.0,8.0};
 
-		// try{
-		// 	betacore::Linar_System<double> ls(A,x,b);
-		// 	ls.backward_substitution();
-		// 	ls.print();
-		// }catch(const std::exception& e){
-		// 	std::cout<<"Problem\n"<< e.what()<<std::endl;
-		// }
+		try{
+			betacore::Linar_System<double> ls(A,x,b);
+			ls.print();
+			ls.backward_substitution();
+			ls.print();
+		}catch(const std::exception& e){
+			std::cout<<"Problem\n"<< e.what()<<std::endl;
+		}
 	}
 	#pragma endregion Linar_System
 
@@ -110,6 +111,22 @@ int main(int argc, char * argv[]){
 		try{
 			betacore::Cubic_Spline<double>cs(data);			
 			cs.print();
+		}catch(const std::exception& e){
+			std::cout<<"Problem\n"<< e.what()<<std::endl;
+		}
+
+		std::cout << "______________________________________"<<std::endl;
+		std::cout <<"Cubic_Spline 2"<<std::endl;
+		std::cout << "______________________________________"<<std::endl;
+		//(1,4)(2,2)(3,4)(4,2)
+		double data2[3][2] ={
+						{-1.0,1.0},
+						{0.0,0.0},
+						{1.0,1.0}
+					};
+		try{
+			betacore::Cubic_Spline<double>cs2(data2);
+			cs2.print();
 		}catch(const std::exception& e){
 			std::cout<<"Problem\n"<< e.what()<<std::endl;
 		}

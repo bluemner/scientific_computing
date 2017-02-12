@@ -69,13 +69,24 @@ struct Cubic_Spline_Exception : public std::exception {
 				T  b[n];
 				T  x[n];
 				for(int i=0; i<n; i++){
-					b[i]=  3 * (data[i+1]-data[i]);
+					b[i]= 3 * (data[i+1][2]-data[i][2]);
 					x[i]= 1;// just to have a value;
 				}
 				T L[n][n];
 				T U[n][n];
 				Matrix<T>::lu(matrix,L,U);
+
+				std::cout<<"Cublic spline matrix A:"<<std::endl;
+				Matrix<T>(matrix).print();
+				std::cout<<"LU:"<<std::endl;
+				std::cout<<"L:"<<std::endl;
+				Matrix<T>(L).print();
+				std::cout<<"U:"<<std::endl;
+				Matrix<T>(U).print();
+				std::cout<<"Loading U into linar_system Pre backward_substitution"<<std::endl;
 				this->linar_system=new Linar_System<T>( U,x,b);
+				this->linar_system->print();
+				
 			}
 		public:
 			
@@ -87,9 +98,11 @@ struct Cubic_Spline_Exception : public std::exception {
 			template<size_t rows, size_t cols>
 			Cubic_Spline(T (&data)[rows][cols]){
 				this->make_linar_system(data, 0);
+
+				this->linar_system->backward_substitution();
 			}
 			void print(){
-				this->linar_system->backward_substitution();
+				std::cout<<"Loading U into linar_system Post backward_substitution"<<std::endl;
 				this->linar_system->print();
 			}
 	};

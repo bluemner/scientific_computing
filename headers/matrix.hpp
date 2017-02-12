@@ -24,6 +24,7 @@
 #define _BETACORE_MATRIX_H_
 #include <iostream>
 #include <exception>
+#include <iomanip>
 namespace betacore
 {
 struct MatrixException : public std::exception {
@@ -170,7 +171,7 @@ class Matrix
 	
 	}
 	/**
-	 *
+	 * 
 	 */
 	void transpose(){
 		T** transpose = new T*[this->_cols];
@@ -250,9 +251,7 @@ class Matrix
 			}
 		}
 	}
-	/**
-	 *
-	 */
+	
 	Matrix& operator+=(const Matrix& rhs){
 		if(rhs._rows != this->_rows){
 			throw  MatrixException();
@@ -273,7 +272,6 @@ class Matrix
 		return * this;
 	}
 	
-
 	friend Matrix operator+(Matrix lhs, const Matrix& rhs){
 		lhs += rhs; // reuse compound assignment
 		return lhs; // return the result by value (uses move constructor)
