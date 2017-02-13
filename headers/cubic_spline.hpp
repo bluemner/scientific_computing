@@ -36,13 +36,20 @@ struct Cubic_Spline_Exception : public std::exception {
 	class Cubic_Spline{
 		private:
 			Linar_System<T> * linar_system;
+			T left_bound_value;
+			T right_bound_value;
+			int left_bound_order;
+			int right_bound_order;
 
 			template<size_t rows, size_t cols>
-			void make_linar_system(T (&data)[rows][cols], int open){
+			void make_linar_system(T (&data)[rows][cols], int mode){
 				const size_t n = rows-1;
+
 				T matrix[n][n];
+				T right_hand_side[n];
+				T b_val[n];
 				//Only neeed to populate the upper matrix
-				if(open ==0){			
+				if(mode ==0){			
 					for(int i=0; i<n;i++){
 						for(int j=0; j<n; j++){
 							if(i==j){
@@ -51,7 +58,6 @@ struct Cubic_Spline_Exception : public std::exception {
 								}else{
 									matrix[i][j]=2;
 								}
-								
 							}else{
 								if(j-1 ==i || j+1 ==i){
 									matrix[i][j]=1;
@@ -59,10 +65,25 @@ struct Cubic_Spline_Exception : public std::exception {
 								else{
 									matrix[i][j]=0;
 								}
-
 							}
 						}
-					}	
+					}
+				}else if(mode ==1){
+					for(int i=1; i<n+1; i++) {
+						matrix[i][i-1] = (T)(1.0/3.0) * (data[i][1]-data[i-1][1]);
+						matrix[i][i]   = (T)(2.0/3.0) * (data[i+1][1]-data[i-1][1]);
+						matrix[i][i+1] = (T)(1.0/3.0) * (data[i+1][1]-data[i][1]);
+						right_hand_side[i]=(data[i+1][2]-data[i][2])/(data[i+1][1]-data[i][1]) - (data[i][2]-data[i-1][2])/(data[i][1]-data[i-1][1]);
+					}
+					if(left_bound_order == FIRST_DIRIVATE){
+							matrix[n-1][n-1]=(T)2.0*(data[n-1][1]-data[n-2][1]);
+							matrix[n-1][n-2]=(T)1.0*(data[n-1][1]-data[n-2][1]);
+							right_hand_side[n-1]=3.0*(right_bound_value-(data[n-1][2]-data[n-2][2])/(data[n-1][1]-data[n-2][1]));
+					}else if(left_bound_order == SECOND_DERIVATIVE){
+						matrix[0][0] = 2.0;
+						matrix[0][1] = 0.0;
+						right_hand_side[0]=left_bound_value;
+					}
 				}else{
 					//TODO;
 				}
@@ -73,7 +94,7 @@ struct Cubic_Spline_Exception : public std::exception {
 					x[i]= 1;// just to have a value;
 				}
 				T L[n][n];
-				T U[n][n];
+				T U[n][n]; 
 				Matrix<T>::lu(matrix,L,U);
 
 				std::cout<<"Cublic spline matrix A:"<<std::endl;
@@ -86,9 +107,11 @@ struct Cubic_Spline_Exception : public std::exception {
 				std::cout<<"Loading U into linar_system Pre backward_substitution"<<std::endl;
 				this->linar_system=new Linar_System<T>( U,x,b);
 				this->linar_system->print();
-				
 			}
 		public:
+			
+			static const int FIRST_DIRIVATE=1;
+			static const int SECOND_DERIVATIVE=2;
 			
 			Cubic_Spline(){	}
 			~Cubic_Spline(){
@@ -97,9 +120,15 @@ struct Cubic_Spline_Exception : public std::exception {
 			}
 			template<size_t rows, size_t cols>
 			Cubic_Spline(T (&data)[rows][cols]){
-				this->make_linar_system(data, 0);
-
+				this->make_linar_system(data, 1);
 				this->linar_system->backward_substitution();
+
+				this->left_bound_value= (T) 0;
+				this->left_bound_order= SECOND_DERIVATIVE;
+
+				this->right_bound_value= (T) 0;
+				this->right_bound_order= SECOND_DERIVATIVE;
+				;
 			}
 			void print(){
 				std::cout<<"Loading U into linar_system Post backward_substitution"<<std::endl;

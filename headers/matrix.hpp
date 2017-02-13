@@ -37,7 +37,7 @@ struct MatrixException : public std::exception {
  */
 template <typename T>
 class Matrix
-{
+ {
   private:
 	T **M;
 	unsigned int _rows;
