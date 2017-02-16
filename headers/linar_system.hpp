@@ -126,6 +126,7 @@ namespace betacore{
 			}
 		public:
 			Linar_System(){}
+
 			template<size_t rows, size_t cols>
 			Linar_System(T (&A)[rows][cols],T (&x)[rows],T (&b)[rows]){
 				if(rows != cols){
@@ -154,25 +155,28 @@ namespace betacore{
 				delete this->b;
 				this->b = nullptr;
 			}
+			
 			/*
 				
 			*/
 			void forward_substitution(){
-				size_t i=0;
-				size_t j=0;
+				int i=0;
+				int j=0;
 				size_t n = this->size;
-				for ( ; j < n ; j++ ){
-					if (this->A->at(i,j) == 0){
+				for ( j=0; j < n ; j++ ){
+					size_t uj = (size_t) j;
+					T Ajj=this->A->at(uj,uj);
+					if (Ajj  == 0){
 						break;
 					}
-					std::cout<<"i:"<<i<<"\tj:"<<j<<std::endl;
-					this->x[j] = this->b[j] / this->A->at(i,j);//[i][j];
-					for (i=j+1; i < j-1 ; i++  ){
-						this->b[i]= this->b[i] - this->A->at(i,j) * this->x[j];
+					this->x[j] = this->b[j] / Ajj;
+					for (i=j+1 ; i<(int)n  ; i++  ){
+						size_t ui = (size_t) i;
+						this->b[i]= this->b[i] -  this->A->at(ui,uj) * this->x[j];
 					}
 				}
-
 			}
+
 			/*
 
 			*/
@@ -222,16 +226,29 @@ namespace betacore{
 					result[i]= ( x[i] - sum ) / this->A.at(i,i);
 				}
 			}
+			T value(T x, T XL,T XR){
+				         //a0  + a1*(x-XL)+ a2*(x-XL)^2 + a3 * (x-XL)^2(x-XR)
+						 
+						 T a0 = this->x[0];
+						 T a1 = this->x[1]*(x-XL);
+						 T a2 = this->x[2]*(x-XL)*(x-XL);
+						 T a3 = this->x[3]*(x-XL)*(x-XL)*(x-XR);
+						 T total = a0 + a1 + a2 + a3;
+				return (T) (total);
+			}
+			T SL(){
+				return x[1];
+			}
 			/*
 				Printing linar system 
 			 */
 			void print(){
 				std::cout<<"A:"<<std::endl;
 				print(this->A);
-				std::cout<<"L:"<<std::endl;
-				print(this->L);
-				std::cout<<"U:"<<std::endl;
-				print(this->U);
+				// std::cout<<"L:"<<std::endl;
+				// print(this->L);
+				// std::cout<<"U:"<<std::endl;
+				// print(this->U);
 			}
 			
 	};

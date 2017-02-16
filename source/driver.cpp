@@ -97,17 +97,20 @@ int main(int argc, char * argv[]){
 		std::cout <<"linar_system"<<std::endl;
 		std::cout << "______________________________________"<<std::endl;
 		double A2[3][3] ={
-						{ 2.0, 4.0,-2.0},
-						{ 4.0, 9.0,-3.0}, 
-						{-2.0,-3.0, 7.0} 
+						{ 2.0,0.0,0.0},
+						{ 4.0,1.0,0.0}, 
+						{-2.0,1.0,4.0} 
+						// { 2.0, 4.0,-2.0},
+						// { 4.0, 9.0,-3.0}, 
+						// {-2.0,-3.0, 7.0} 
 					};
 		double x2[3]={1.0,1.0, 1.0};
-		double b2[3]={2.0,8.0,10.0};
+		double b2[3]={4.0,10.0,-6.0}; //{2.0,8.0,10.0};
 
 		try{
 			betacore::Linar_System<double> ls2(A2,x2,b2);
 			ls2.print();
-			ls2.backward_substitution();
+			ls2.forward_substitution();
 			ls2.print();
 		}catch(const std::exception& e){
 			std::cout<<"Problem\n"<< e.what()<<std::endl;

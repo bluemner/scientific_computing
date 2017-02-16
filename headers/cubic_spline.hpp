@@ -41,33 +41,74 @@ struct Cubic_Spline_Exception : public std::exception {
 			int left_bound_order;
 			int right_bound_order;
 
+		
 			template<size_t rows, size_t cols>
 			void make_linar_system(T (&data)[rows][cols], int mode){
-				const size_t n = rows-1;
+				const size_t n = 4;
 
-				T matrix[n][n];
-				T right_hand_side[n];
-				T b_val[n];
+				T matrix[4][4];
+				T right_hand_side[4];
+				T L[n][n];
+				T U[n][n]; 
+
+				T  b[n];
+				T  x[n];
+				for(int i=0; i<n; i++){
+					//b[i]= 3 * (data[i+1][2]-data[i][2]);
+					x[i]= 1;// just to have a value;
+				}
 				//Only neeed to populate the upper matrix
 				if(mode ==0){			
-					for(int i=0; i<n;i++){
-						for(int j=0; j<n; j++){
-							if(i==j){
-								if(i==0 || i== n-1){
-									matrix[i][j]=4;
-								}else{
-									matrix[i][j]=2;
-								}
-							}else{
-								if(j-1 ==i || j+1 ==i){
-									matrix[i][j]=1;
-								}
-								else{
-									matrix[i][j]=0;
-								}
-							}
+					T SL = left_bound_value;
+					T SR = right_bound_value;
+					for(int i=1; i < rows ;i++){
+						T XL=data[i-1][0];
+						T YL=data[i-1][1];
+						T XR=data[i][0];
+						T YR=data[i][1];
+						
+						matrix[0][0]=(T)1;
+						matrix[0][1]=(T)0;
+						matrix[0][2]=(T)0;
+						matrix[0][3]=(T)0;
+
+						matrix[1][0]=(T)0;
+						matrix[1][1]=(T)1;
+						matrix[1][2]=(T)0;
+						matrix[1][3]=(T)0;
+
+						matrix[2][0]=(T)1;
+						matrix[2][1]=(T)(XR-XL);
+						matrix[2][2]=(T)(XR-XL)*(XR-XL);
+						matrix[2][3]=(T)0;
+
+						matrix[3][0]=(T)0;
+						matrix[3][1]=(T)1;
+						matrix[3][2]=(T)2 *(XR-XL);
+						matrix[3][3]=(T)(XR-XL)*(XR-XL);
+						
+						right_hand_side[0]= YL;
+						right_hand_side[1]= SL;
+						right_hand_side[2]= YR;
+						right_hand_side[3]= SR;
+
+						this->linar_system=new Linar_System<T>( matrix,x,right_hand_side);
+						this->linar_system->forward_substitution();
+						//this->linar_system->print();
+						SR=SL;
+						SL=this->linar_system->SL();
+						
+						for(double k=XL; k<XR; k+=0.1){
+							std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(k,XL,XR)<<std::endl ;
+							//std::cout<<std::fixed<<std::setprecision(2)<<"("<< k<< ","<<this->linar_system->value(k,XL,XR)<<")"<<std::endl ;
 						}
+						if(i +1 == rows){
+							std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(XR,XL,XR)<<std::endl ;
+						}
+				
+					
 					}
+							
 				}else if(mode ==1){
 					for(int i=1; i<n+1; i++) {
 						matrix[i][i-1] = (T)(1.0/3.0) * (data[i][1]-data[i-1][1]);
@@ -87,26 +128,19 @@ struct Cubic_Spline_Exception : public std::exception {
 				}else{
 					//TODO;
 				}
-				T  b[n];
-				T  x[n];
-				for(int i=0; i<n; i++){
-					b[i]= 3 * (data[i+1][2]-data[i][2]);
-					x[i]= 1;// just to have a value;
-				}
-				T L[n][n];
-				T U[n][n]; 
-				Matrix<T>::lu(matrix,L,U);
+		
+			
 
-				std::cout<<"Cublic spline matrix A:"<<std::endl;
-				Matrix<T>(matrix).print();
-				std::cout<<"LU:"<<std::endl;
-				std::cout<<"L:"<<std::endl;
-				Matrix<T>(L).print();
-				std::cout<<"U:"<<std::endl;
-				Matrix<T>(U).print();
-				std::cout<<"Loading U into linar_system Pre backward_substitution"<<std::endl;
-				this->linar_system=new Linar_System<T>( U,x,b);
-				this->linar_system->print();
+				// std::cout<<"Cublic spline matrix A:"<<std::endl;
+				// Matrix<T>(matrix).print();
+				// std::cout<<"LU:"<<std::endl;
+				// std::cout<<"L:"<<std::endl;
+				// Matrix<T>(L).print();
+				// std::cout<<"U:"<<std::endl;
+				// Matrix<T>(U).print();
+				// std::cout<<"Loading U into linar_system Pre backward_substitution"<<std::endl;
+				// this->linar_system=new Linar_System<T>( U,x,b);
+				// this->linar_system->print();
 			}
 		public:
 			
@@ -120,19 +154,22 @@ struct Cubic_Spline_Exception : public std::exception {
 			}
 			template<size_t rows, size_t cols>
 			Cubic_Spline(T (&data)[rows][cols]){
-				this->make_linar_system(data, 1);
-				this->linar_system->backward_substitution();
+			
 
 				this->left_bound_value= (T) 0;
 				this->left_bound_order= SECOND_DERIVATIVE;
 
 				this->right_bound_value= (T) 0;
 				this->right_bound_order= SECOND_DERIVATIVE;
-				;
+
+				this->make_linar_system(data, 0);
+		
+				
 			}
 			void print(){
-				std::cout<<"Loading U into linar_system Post backward_substitution"<<std::endl;
-				this->linar_system->print();
+				std::cout<<"Loading U into linar_system Post forward substitution"<<std::endl;
+				//this->linar_system->print();]
+				
 			}
 	};
 }
