@@ -99,14 +99,13 @@ struct Cubic_Spline_Exception : public std::exception {
 						SL=this->linar_system->SL();
 						
 						for(double k=XL; k<XR; k+=0.1){
-							std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(k,XL,XR)<<std::endl ;
-							//std::cout<<std::fixed<<std::setprecision(2)<<"("<< k<< ","<<this->linar_system->value(k,XL,XR)<<")"<<std::endl ;
+							//std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(k,XL,XR)<<std::endl ;
+							std::cout<<std::fixed<<std::setprecision(2)<<"("<< k<< ","<<this->linar_system->value(k,XL,XR)<<")"<<std::endl ;
 						}
-						if(i +1 == rows){
-							std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(XR,XL,XR)<<std::endl ;
-						}
-				
-					
+						// if(i +1 == rows){
+						// 	std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(XR,XL,XR)<<std::endl ;
+						// 	//std::cout<<std::fixed<<std::setprecision(2)<<"("<< XR<< ","<<this->linar_system->value(XR,XL,XR)<<")"<<std::endl ;
+						// }
 					}
 							
 				}else if(mode ==1){
@@ -161,7 +160,6 @@ struct Cubic_Spline_Exception : public std::exception {
 
 				this->right_bound_value= (T) 0;
 				this->right_bound_order= SECOND_DERIVATIVE;
-
 				this->make_linar_system(data, 0);
 		
 				

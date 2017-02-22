@@ -23,10 +23,12 @@
 #include <iostream>
 #include "../headers/matrix.hpp"
 #include "../headers/cubic_spline.hpp"
+
 /**
  * Test Driver Class
  */
 int main(int argc, char * argv[]){
+
 	#pragma region Region_Matrix
 	{
 		// betacore::Matrix<double> matrix(3);
@@ -123,15 +125,22 @@ int main(int argc, char * argv[]){
 		std::cout << "______________________________________"<<std::endl;
 		std::cout <<"Cubic_Spline"<<std::endl;
 		std::cout << "______________________________________"<<std::endl;
+
 		//(1,4)(2,2)(3,4)(4,2)
-		double data[4][2] ={
+		double data[6][2] ={
 						{1.0,4.0},
 						{2.0,2.0},
 						{3.0,4.0},
-						{4.0,2.0}
+						{4.0,2.0},
+						{6.0,0.0},
+						{8.0,5.0}
 					};
-
-
+		std::cout<<"Input" <<std::endl;
+	    for(int i=0; i< 6 ; i++){  	
+  			
+			std::cout<<"("<< data[i][0] <<","<< data[i][1]  << ")" <<std::endl;
+		}
+		std::cout<<"Output Natural Cubic Spline" <<std::endl;
 		try{
 			betacore::Cubic_Spline<double>cs(data);			
 			cs.print();
@@ -148,6 +157,12 @@ int main(int argc, char * argv[]){
 						{0.0,0.0},
 						{1.0,1.0}
 					};
+		std::cout<<"Input" <<std::endl;
+	    for(int i=0; i< 3 ; i++){  	
+  			
+			std::cout<<"("<< data2[i][0] <<","<< data2[i][1]  << ")" <<std::endl;
+		}
+		std::cout<<"Output Natural Cubic Spline" <<std::endl;
 		try{
 			betacore::Cubic_Spline<double>cs2(data2);
 			cs2.print();
