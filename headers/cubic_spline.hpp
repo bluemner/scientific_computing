@@ -40,8 +40,6 @@ struct Cubic_Spline_Exception : public std::exception {
 			T right_bound_value;
 			int left_bound_order;
 			int right_bound_order;
-
-		
 			template<size_t rows, size_t cols>
 			void make_linar_system(T (&data)[rows][cols], int mode){
 				const size_t n = 4;
@@ -127,8 +125,6 @@ struct Cubic_Spline_Exception : public std::exception {
 				}else{
 					//TODO;
 				}
-		
-			
 
 				// std::cout<<"Cublic spline matrix A:"<<std::endl;
 				// Matrix<T>(matrix).print();

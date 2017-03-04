@@ -23,7 +23,8 @@
 #include <iostream>
 #include "../headers/matrix.hpp"
 #include "../headers/cubic_spline.hpp"
-
+#include "../headers/lagrangian.hpp"
+#include <chrono>
 /**
  * Test Driver Class
  */
@@ -122,6 +123,8 @@ int main(int argc, char * argv[]){
 
 	#pragma region Cubic_Spline
 	{
+		auto start = std::chrono::system_clock::now();
+		
 		std::cout << "______________________________________"<<std::endl;
 		std::cout <<"Cubic_Spline"<<std::endl;
 		std::cout << "______________________________________"<<std::endl;
@@ -169,6 +172,10 @@ int main(int argc, char * argv[]){
 		}catch(const std::exception& e){
 			std::cout<<"Problem\n"<< e.what()<<std::endl;
 		}
+
+	  auto end = std::chrono::system_clock::now();
+	   std::chrono::duration<double> diff = end-start;
+	  std::cout<< "Running time:\t" << diff.count() <<"s" << std::endl;
 	}
 	#pragma endregion Cubic_Spline
 	// #ifdef _WIN32
