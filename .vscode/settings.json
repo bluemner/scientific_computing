@@ -1,6 +1,9 @@
 {
 	"files.associations": {
 		"*.cl": "c",
-		"*h*h*h*hxutility": "cpp"
+		"*.tpl": "html",
+		"*h*h*h*hxutility": "cpp",
+		"xutility": "cpp",
+		"cmath": "cpp"
 	}
 }
