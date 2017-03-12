@@ -23,25 +23,25 @@
 #ifndef _BETACORE_CUBIC_SPLINE_H_
 #define _BETACORE_CUBIC_SPLINE_H_
 
-#ifndef _BETACORE_LINAR_SYSTEM_H_
-#include "./linar_system.hpp"
+#ifndef _BETACORE_LINEAR_SYSTEM_H_
+#include "./linear_system.hpp"
 #endif
 namespace betacore{
 struct Cubic_Spline_Exception : public std::exception {
    const char * what () const throw () {
-      return "Linar System Exception";
+      return "Linear System Exception";
    }
 };
 	template <typename T>
 	class Cubic_Spline{
 		private:
-			Linar_System<T> * linar_system;
+			Linear_System<T> * linear_system;
 			T left_bound_value;
 			T right_bound_value;
 			int left_bound_order;
 			int right_bound_order;
 			template<size_t rows, size_t cols>
-			void make_linar_system(T (&data)[rows][cols], int mode){
+			void make_linear_system(T (&data)[rows][cols], int mode){
 				const size_t n = 4;
 
 				T matrix[4][4];
@@ -90,19 +90,19 @@ struct Cubic_Spline_Exception : public std::exception {
 						right_hand_side[2]= YR;
 						right_hand_side[3]= SR;
 
-						this->linar_system=new Linar_System<T>( matrix,x,right_hand_side);
-						this->linar_system->forward_substitution();
-						//this->linar_system->print();
+						this->linear_system=new Linear_System<T>( matrix,x,right_hand_side);
+						this->linear_system->forward_substitution();
+						//this->linear_system->print();
 						SR=SL;
-						SL=this->linar_system->SL();
+						SL=this->linear_system->SL();
 						
 						for(double k=XL; k<XR; k+=0.1){
-							//std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(k,XL,XR)<<std::endl ;
-							std::cout<<std::fixed<<std::setprecision(2)<<"("<< k<< ","<<this->linar_system->value(k,XL,XR)<<")"<<std::endl ;
+							//std::cout<<std::fixed<<std::setprecision(2)<< this->linear_system->value(k,XL,XR)<<std::endl ;
+							std::cout<<std::fixed<<std::setprecision(2)<<"("<< k<< ","<<this->linear_system->value(k,XL,XR)<<")"<<std::endl ;
 						}
 						// if(i +1 == rows){
-						// 	std::cout<<std::fixed<<std::setprecision(2)<< this->linar_system->value(XR,XL,XR)<<std::endl ;
-						// 	//std::cout<<std::fixed<<std::setprecision(2)<<"("<< XR<< ","<<this->linar_system->value(XR,XL,XR)<<")"<<std::endl ;
+						// 	std::cout<<std::fixed<<std::setprecision(2)<< this->linear_system->value(XR,XL,XR)<<std::endl ;
+						// 	//std::cout<<std::fixed<<std::setprecision(2)<<"("<< XR<< ","<<this->linear_system->value(XR,XL,XR)<<")"<<std::endl ;
 						// }
 					}
 							
@@ -133,9 +133,9 @@ struct Cubic_Spline_Exception : public std::exception {
 				// Matrix<T>(L).print();
 				// std::cout<<"U:"<<std::endl;
 				// Matrix<T>(U).print();
-				// std::cout<<"Loading U into linar_system Pre backward_substitution"<<std::endl;
-				// this->linar_system=new Linar_System<T>( U,x,b);
-				// this->linar_system->print();
+				// std::cout<<"Loading U into linear_system Pre backward_substitution"<<std::endl;
+				// this->linear_system=new Linear_System<T>( U,x,b);
+				// this->linear_system->print();
 			}
 		public:
 			
@@ -144,8 +144,8 @@ struct Cubic_Spline_Exception : public std::exception {
 			
 			Cubic_Spline(){	}
 			~Cubic_Spline(){
-				delete this->linar_system;
-				this->linar_system= nullptr;
+				delete this->linear_system;
+				this->linear_system= nullptr;
 			}
 			template<size_t rows, size_t cols>
 			Cubic_Spline(T (&data)[rows][cols]){
@@ -156,13 +156,13 @@ struct Cubic_Spline_Exception : public std::exception {
 
 				this->right_bound_value= (T) 0;
 				this->right_bound_order= SECOND_DERIVATIVE;
-				this->make_linar_system(data, 0);
+				this->make_linear_system(data, 0);
 		
 				
 			}
 			void print(){
-				std::cout<<"Loading U into linar_system Post forward substitution"<<std::endl;
-				//this->linar_system->print();]
+				std::cout<<"Loading U into linear_system Post forward substitution"<<std::endl;
+				//this->linear_system->print();]
 				
 			}
 	};

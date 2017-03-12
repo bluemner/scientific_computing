@@ -20,8 +20,8 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
  */
-#ifndef _BETACORE_LINAR_SYSTEM_H_
-#define _BETACORE_LINAR_SYSTEM_H_
+#ifndef _BETACORE_LINEAR_SYSTEM_H_
+#define _BETACORE_LINEAR_SYSTEM_H_
 
 #ifndef _BETACORE_MATRIX_H_
 #include "./matrix.hpp"
@@ -30,13 +30,13 @@
 #include <iostream>
 #include <iomanip>
 namespace betacore{
-	struct Linar_System_Exception : public std::exception {
+	struct Linear_System_Exception : public std::exception {
    const char * what () const throw () {
-      return "Linar System Exception";
+      return "Linear System Exception";
    }
 };
 	template <typename T>
-	class Linar_System{
+	class Linear_System{
 		private:
 			Matrix<T> * A;
 			Matrix<T> * L;
@@ -125,12 +125,12 @@ namespace betacore{
 
 			}
 		public:
-			Linar_System(){}
+			Linear_System(){}
 
 			template<size_t rows, size_t cols>
-			Linar_System(T (&A)[rows][cols],T (&x)[rows],T (&b)[rows]){
+			Linear_System(T (&A)[rows][cols],T (&x)[rows],T (&b)[rows]){
 				if(rows != cols){
-					throw Linar_System_Exception();	
+					throw Linear_System_Exception();	
 				}
 				copy(A,x,b);
 				T L[rows][cols];
@@ -139,7 +139,7 @@ namespace betacore{
 				this->L = new Matrix<T>(L);
 				this->U = new Matrix<T>(U);
 			}
-			~Linar_System(){
+			~Linear_System(){
 				delete this->A;
 				this->A = nullptr;
 				

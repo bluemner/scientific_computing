@@ -25,6 +25,8 @@
 #include "../headers/cubic_spline.hpp"
 #include "../headers/lagrangian.hpp"
 #include <chrono>
+#include <cmath>
+
 /**
  * Test Driver Class
  */
@@ -73,10 +75,10 @@ int main(int argc, char * argv[]){
 	}
 	#pragma endregion Region_Matrix
 
-	#pragma region Linar_System
+	#pragma region Lienar_System
 	{
 		std::cout << "______________________________________"<<std::endl;
-		std::cout <<"linar_system"<<std::endl;
+		std::cout <<"linear_system"<<std::endl;
 		std::cout << "______________________________________"<<std::endl;
 		double A[3][3] ={
 						{2.0,4.0,-2.0},
@@ -87,7 +89,7 @@ int main(int argc, char * argv[]){
 		double b[3]={2.0,4.0,8.0};
 
 		try{
-			betacore::Linar_System<double> ls(A,x,b);
+			betacore::Linear_System<double> ls(A,x,b);
 			ls.print();
 			ls.backward_substitution();
 			ls.print();
@@ -97,7 +99,7 @@ int main(int argc, char * argv[]){
 
 
 		std::cout << "______________________________________"<<std::endl;
-		std::cout <<"linar_system"<<std::endl;
+		std::cout <<"linear_system"<<std::endl;
 		std::cout << "______________________________________"<<std::endl;
 		double A2[3][3] ={
 						{ 2.0,0.0,0.0},
@@ -111,7 +113,7 @@ int main(int argc, char * argv[]){
 		double b2[3]={4.0,10.0,-6.0}; //{2.0,8.0,10.0};
 
 		try{
-			betacore::Linar_System<double> ls2(A2,x2,b2);
+			betacore::Linear_System<double> ls2(A2,x2,b2);
 			ls2.print();
 			ls2.forward_substitution();
 			ls2.print();
@@ -119,7 +121,7 @@ int main(int argc, char * argv[]){
 			std::cout<<"Problem\n"<< e.what()<<std::endl;
 		}
 	}
-	#pragma endregion Linar_System
+	#pragma endregion Linear_System
 
 	#pragma region Cubic_Spline
 	{
@@ -178,11 +180,21 @@ int main(int argc, char * argv[]){
 	  std::cout<< "Running time:\t" << diff.count() <<"s" << std::endl;
 	}
 	#pragma endregion Cubic_Spline
+
+	#pragma region lagrangian
+	{
+		
+	}
+	#pragma endregion lagrangian
+
 	// #ifdef _WIN32
 	// 	std::cout<<"Press any key to exit"<<std::endl;
 	// 	char x;
 	// 	std::cin>>x;
 	// #endif
+
+
+
 	return 0;
 }
 //*/
