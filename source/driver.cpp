@@ -24,6 +24,7 @@
 #include "../headers/matrix.hpp"
 #include "../headers/cubic_spline.hpp"
 #include "../headers/lagrangian.hpp"
+#include "../headers/golden_section_search.hpp"
 #include <chrono>
 #include <cmath>
 
@@ -186,6 +187,11 @@ int main(int argc, char * argv[]){
 		
 	}
 	#pragma endregion lagrangian
+
+	double a = 0.0, b =1.0, tol = 0.001;
+	betacore::GoldenSectionSearch<double> d;
+	d.search(a, b, tol);
+
 
 	// #ifdef _WIN32
 	// 	std::cout<<"Press any key to exit"<<std::endl;
