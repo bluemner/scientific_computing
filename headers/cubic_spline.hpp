@@ -55,7 +55,7 @@ struct Cubic_Spline_Exception : public std::exception {
 					//b[i]= 3 * (data[i+1][2]-data[i][2]);
 					x[i]= 1;// just to have a value;
 				}
-				//Only neeed to populate the upper matrix
+				//Only need to populate the upper matrix
 				if(mode ==0){			
 					T SL = left_bound_value;
 					T SR = right_bound_value;
@@ -113,7 +113,7 @@ struct Cubic_Spline_Exception : public std::exception {
 						matrix[i][i+1] = (T)(1.0/3.0) * (data[i+1][1]-data[i][1]);
 						right_hand_side[i]=(data[i+1][2]-data[i][2])/(data[i+1][1]-data[i][1]) - (data[i][2]-data[i-1][2])/(data[i][1]-data[i-1][1]);
 					}
-					if(left_bound_order == FIRST_DIRIVATE){
+					if(left_bound_order == FIRST_DERIVATIVE){
 							matrix[n-1][n-1]=(T)2.0*(data[n-1][1]-data[n-2][1]);
 							matrix[n-1][n-2]=(T)1.0*(data[n-1][1]-data[n-2][1]);
 							right_hand_side[n-1]=3.0*(right_bound_value-(data[n-1][2]-data[n-2][2])/(data[n-1][1]-data[n-2][1]));
@@ -126,7 +126,7 @@ struct Cubic_Spline_Exception : public std::exception {
 					//TODO;
 				}
 
-				// std::cout<<"Cublic spline matrix A:"<<std::endl;
+				// std::cout<<"Cubic spline matrix A:"<<std::endl;
 				// Matrix<T>(matrix).print();
 				// std::cout<<"LU:"<<std::endl;
 				// std::cout<<"L:"<<std::endl;
@@ -139,7 +139,7 @@ struct Cubic_Spline_Exception : public std::exception {
 			}
 		public:
 			
-			static const int FIRST_DIRIVATE=1;
+			static const int FIRST_DERIVATIVE=1;
 			static const int SECOND_DERIVATIVE=2;
 			
 			Cubic_Spline(){	}

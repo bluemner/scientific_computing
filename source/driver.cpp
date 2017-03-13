@@ -76,7 +76,7 @@ int main(int argc, char * argv[]){
 	}
 	#pragma endregion Region_Matrix
 
-	#pragma region Lienar_System
+	#pragma region Linear_System
 	{
 		std::cout << "______________________________________"<<std::endl;
 		std::cout <<"linear_system"<<std::endl;
@@ -176,9 +176,9 @@ int main(int argc, char * argv[]){
 			std::cout<<"Problem\n"<< e.what()<<std::endl;
 		}
 
-	  auto end = std::chrono::system_clock::now();
-	   std::chrono::duration<double> diff = end-start;
-	  std::cout<< "Running time:\t" << diff.count() <<"s" << std::endl;
+		auto end = std::chrono::system_clock::now();
+		std::chrono::duration<double> diff = end-start;
+		std::cout<< "Running time:\t" << diff.count() <<"s" << std::endl;
 	}
 	#pragma endregion Cubic_Spline
 
@@ -193,14 +193,14 @@ int main(int argc, char * argv[]){
 	d.search(a, b, tol);
 
 
+	a = -1.0, b =2.0, tol = 0.001;
+	d.search(a, b, tol);
+
 	// #ifdef _WIN32
 	// 	std::cout<<"Press any key to exit"<<std::endl;
 	// 	char x;
 	// 	std::cin>>x;
 	// #endif
-
-
-
 	return 0;
 }
 //*/
