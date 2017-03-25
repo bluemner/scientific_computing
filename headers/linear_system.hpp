@@ -240,7 +240,7 @@ namespace betacore{
 				return x[1];
 			}
 			/*
-				Printing linar system 
+				Printing linear system 
 			 */
 			void print(){
 				std::cout<<"A:"<<std::endl;

@@ -100,10 +100,6 @@ struct Cubic_Spline_Exception : public std::exception {
 							//std::cout<<std::fixed<<std::setprecision(2)<< this->linear_system->value(k,XL,XR)<<std::endl ;
 							std::cout<<std::fixed<<std::setprecision(2)<<"("<< k<< ","<<this->linear_system->value(k,XL,XR)<<")"<<std::endl ;
 						}
-						// if(i +1 == rows){
-						// 	std::cout<<std::fixed<<std::setprecision(2)<< this->linear_system->value(XR,XL,XR)<<std::endl ;
-						// 	//std::cout<<std::fixed<<std::setprecision(2)<<"("<< XR<< ","<<this->linear_system->value(XR,XL,XR)<<")"<<std::endl ;
-						// }
 					}
 							
 				}else if(mode ==1){
