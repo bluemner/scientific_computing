@@ -98,8 +98,17 @@ class Matrix
 		copy(matrix);
 	}
 
+/*
+	 * @desc Create identity matrix
+	 * @param {int} size Create identity matrix of M x M st. M = Size
+	 */
+	Matrix(const unsigned int rows, const unsigned int cols){
+		this->M = new T*[rows];
+		for(size_t i=0; i<rows;++i)
+			this->M[i]=new T[cols];
+	}
 	/*
-	 * @desc Create identiy matrix
+	 * @desc Create identity matrix
 	 * @param {int} size Create identity matrix of M x M st. M = Size
 	 */
 	Matrix(const unsigned int size){
@@ -117,7 +126,7 @@ class Matrix
 			this->M[i]=nullptr;
 		}
 		delete this->M;
-		this->M  = nullptr;
+		this->M = nullptr;
 		this->_rows =0;
 		this->_cols =0;
 	}
@@ -125,13 +134,6 @@ class Matrix
 	 * @desc prints out matrix to terminal
 	 */
 	void print(){
-		// for(unsigned int i=0; i< this->_rows; ++i){
-		// 	for(unsigned int j =0; j < this->_cols; ++j){
-		// 		std::cout<<this->M[i][j]<<"\t";
-		// 	}
-		// 	std::cout<<std::endl;
-		// }
-
 		size_t i = 0;
 		size_t j = 0;
 		size_t precision = 5;
@@ -142,36 +144,36 @@ class Matrix
 			std::cout<<" ";
 			for(j=0; j< width; ++j){
 				std::cout<<" ";
-			}			
-			
-		}			
+			}
+
+		}
 		std::cout<<" ┐"<<std::endl;
 
 		for(i=0; i< this->_rows; i++){
 			std::cout<<"│";
-			
+
 			for(j=0; j< this->_cols; j++){
 				std::cout<<" "<<std::fixed<<std::setprecision(precision)<<std::setfill(fill)<<std::setw(width);
 				std::cout<<this->M[i][j];
 			}
-			std::cout<<" │";	
-							
+			std::cout<<" │";
+
 			std::cout<<std::endl;
 		}
 		std::cout<< "└";
-		for(i=0; i< this->_cols; i++){	
-			std::cout<<" ";				
+		for(i=0; i< this->_cols; i++){
+			std::cout<<" ";
 			for(j=0; j< width; ++j){
 				std::cout<<" ";
-			}	
+			}
 		}
 		std::cout<<" ┘"<<std::endl;
-		
+
 		std::cout<<std::endl;
-	
+
 	}
 	/**
-	 * 
+	 *
 	 */
 	void transpose(){
 		T** transpose = new T*[this->_cols];
@@ -203,6 +205,7 @@ class Matrix
 	unsigned int col_count(){
 		return this->_cols;
 	}
+
 	T at(size_t &row, size_t &col){
 		if( (unsigned int) row > this->_rows -1 ){
 			throw MatrixException();
@@ -213,12 +216,21 @@ class Matrix
 		return this->M[row][col];
 	}
 
+	void set(size_t row, size_t col, T val){
+		this->M[row][col]= val;
+	}
+
+	template<size_t size>
+	void set(size_t row,T (&A)[size] ){
+			this->M[row]= A;
+	}
+
 	template <size_t size>
 	static void lu(T (&A)[size][size], T (&L)[size][size], T (&U)[size][size]){
 		size_t i=0;
 		size_t j=0;
 		size_t k=0;
-		
+
 		for (i = 0; i < size; i++)
 		{
 			for (j = 0; j < size; j++)
@@ -251,31 +263,135 @@ class Matrix
 			}
 		}
 	}
-	
-	Matrix& operator+=(const Matrix& rhs){
-		if(rhs._rows != this->_rows){
-			throw  MatrixException();
-		}
-		T ** union_matrix = new T*[this->_rows];
-		size_t count = this->_cols+rhs._cols;
-		for(unsigned int i=0; i < this->_rows; ++i){
-			union_matrix[i]= new T[count];
-		}
-		for(unsigned int i=0; i < this->_rows; ++i){
-			for(unsigned int j=0; j<count; ++j){
-				union_matrix[i][j]= (j<this->_rows)? this->M[i][j] : rhs.M[i][j-this->_rows];
+
+	//
+	//
+	//
+	void zero(){
+		for(unsigned int i=0; i< this->_rows; ++i){
+			for(unsigned int j=0; j< this->_rows; ++j){
+				this->M[i][j]=0;
 			}
 		}
-		delete this->M;
-		this->M = union_matrix;
-		this->_cols=count;
-		return * this;
 	}
+
+	#pragma region Region_operator
 	
-	friend Matrix operator+(Matrix lhs, const Matrix& rhs){
-		lhs += rhs; // reuse compound assignment
-		return lhs; // return the result by value (uses move constructor)
-	}
+		Matrix& operator+=(const Matrix& rhs){
+
+			T** R = new T*[this->_rows];
+			for(unsigned int i=0; i < this->_rows; ++i){
+				R[i]= new T[this->_cols];
+			}
+			for (unsigned int j = 0; j < this->_rows; j++)
+				for (int i = 0; i < this->_cols; i++)
+					R[j][i] = M[j][i] + rhs.M[j][i];
+
+			delete this->M;
+			this->M = R;
+			return * this;
+		}
+
+		Matrix& operator+(const Matrix& rhs){
+			Matrix<T> * R = new Matrix<T>(this->_rows,this->_cols);
+			R->_cols = rhs._cols;
+			R->_rows = rhs._rows;
+			// for(unsigned int i=0; i < this->_rows; ++i){
+			// 	R[i]= new T[this->_cols];
+			// }
+			for (unsigned int j = 0; j < this->_rows; j++)
+				for (unsigned int i = 0; i < this->_cols; i++)
+					R->M[j][i] = M[j][i] + rhs.M[j][i];
+			return *R;
+		}
+
+		Matrix& operator-=(const Matrix& rhs){
+			if(this->_rows != rhs._rows || this->_cols != rhs._cols){
+				throw MatrixException();
+			}
+			T** R = new T*[this->_rows];
+			for(unsigned int i=0; i < this->_rows; ++i){
+				R[i]= new T[this->_cols];
+			}
+			for (unsigned int j = 0; j < this->_rows; j++)
+				for (int i = 0; i < this->_cols; i++)
+					R[j][i] = M[j][i] - rhs.M[j][i];
+
+			delete this->M;
+			this->M = R;
+			return * this;
+		}
+
+		Matrix& operator-(const Matrix& rhs){
+			Matrix<T> * R = new Matrix<T>(this->_rows,this->_cols);
+			R->_cols = rhs._cols;
+			R->_rows = rhs._rows;
+			// for(unsigned int i=0; i < this->_rows; ++i){
+			// 	R[i]= new T[this->_cols];
+			// }
+			for (unsigned int j = 0; j < this->_rows; j++)
+				for (unsigned int i = 0; i < this->_cols; i++)
+					R->M[j][i] = M[j][i] - rhs.M[j][i];
+			return *R;
+		}
+
+		Matrix& operator*(const T scale){
+			Matrix<T> A(this->_rows, this->_cols);
+			for (int j = 0; j < this->_rows; j++)
+				for (int i = 0; i < this->_cols; i++)
+					A[j][i] = M[j][i] * scale;
+			return A;
+		}
+
+		Matrix& operator*=(const Matrix& rhs){
+			if(this->_cols != rhs._rows ){
+				throw MatrixException();
+			}
+			
+			T** R = new T*[this->_rows];
+			for(unsigned int i=0; i < this->_rows; ++i){
+				R[i]= new T[rhs._cols];
+			}
+			for(unsigned int i= 0; i< this->_rows; i++ ){
+				for(unsigned int j= 0; j< rhs._cols; j++ ){
+					R[i][j]=(T)0.0;
+					for(unsigned int k = 0; k< this->_cols; k++ ){
+						R[i][j] += M[i][k] * rhs.M[k][j];
+					}
+				}
+			}
+			this->_cols = rhs._cols;
+			delete this->M;
+			this->M = R;
+			return *this;
+		}
+		friend Matrix operator*(Matrix lhs, const Matrix& rhs){
+			lhs *= rhs; // reuse compound assignment
+			return lhs; // return the result by value (uses move constructor)
+		}
+
+		T& operator[](int row){
+			this->_M[row];
+		}
+
+		Matrix& operator=(const Matrix& rhs) {
+			if (this->_rows * this->_cols != rhs._rows * rhs._cols) {
+				delete this->M;
+				this->M = new T*[this->_rows];
+				for(unsigned int i=0; i < this->_rows; ++i){
+					this->M[i] = new T[this->_cols];
+				}
+				this->_rows = rhs._rows;
+				this->_cols = rhs._cols;
+			}
+			for (unsigned int i = 0; i < _rows; i++){
+				for (unsigned int j = 0; j < _cols; j++){
+					this->M[i][j] = rhs.M[i][j];
+				}
+			}
+			return *this;
+		}
+	#pragma endregion Region_operator
 };
 }
 #endif

@@ -18,7 +18,11 @@
         },
         {
             "name": "Win32",
-            "includePath": ["c:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include","headers"],
+            "includePath": ["c:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/um/gl",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/um",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/ucrt"
+            ],
 
             "browse" : {
                 "limitSymbolsToIncludedHeaders" : true,

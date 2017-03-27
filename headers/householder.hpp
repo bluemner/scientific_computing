@@ -22,6 +22,13 @@
  */
 #ifndef _BETACORE_HOUSEHOLDER_H_
 #define _BETACORE_HOUSEHOLDER_H_
+
+#ifndef _BETACORE_MATRIX_H_
+#include "./matrix.hpp"
+#endif
+
+#include <math.h>
+
 namespace betacore{
 	struct Householder_Exception : public std::exception {
 	const char * what () const throw () {
@@ -29,24 +36,69 @@ namespace betacore{
 	}
 	template<typename T>
 	class Householder{
+	private:
 
-	public:	
+	public:
+		Matrix<T> * A;
+		Matrix<T> * R;
+		unsigned int _rows;
+		unsigned int _cols;
+
 		template<size_t rows, size_t cols>
-		Householder(T (&A)[rows][cols],T (&V)[rows][cols] ){
-			for(size_t i=0; i< cols){
-					T val[i-rows];
-				for(size_t j=i; j<rows-i; ++j){
-					
-					V[i]=;
-				}
-			}
+		Householder(T (&A)[rows][cols]){
+			this->A = new Matrix<T>(A);
+			this->R = new Matrix<T>(A);
+			this->_rows = rows;
+			this->_cols = cols;
 		}
 		~Householder(){
-
+			delete A;
+			A = nullptr;
+			delete V;
+			V = nullptr;
 		}
+		void run(){
+			T magnitude;
+			T alpha;
+			Matrix<T> v(A.row_count(),1);
+			Matrix<T> u(A.row_count(),1);
+			Matrix<T> Identity((const unsigned int) cols);
+			for ( unsigned int i = 0 ; i < this->cols ; i++){
+				zero(u);
+				zero(v);
+				
+				//GET ALPHA
+				magnitude = (T) 0.0;
+				for(unsigned int j=0; j < this->rows; j++){
+					u[j] = R.at(i,j);
+					magnitude += (T) u[j]*u[j];
+				}
+				
+				alpha = u[i] < 0 ? magnitude : -magnitude;
+				magnitude= (T) 0.0;
+				for(unsigned int j=i; j< this->rows; j++){
+					v[j]= j==i? u[j]+ alpha : u[j];
+					magnitude += v[j] * v[j];
+				}
+				magnitude = sqrt(magnitude);
+				
+				if(magnitude == 0){
+					continue;
+				}
 
-		print(){
-
+				for(size_t j=i; j < this->rows; j++){
+					v[j] /= magnitude;
+				}
+				P = I - (v*v.transpose()) * 2.0;
+				P.print();
+				R = P * R;
+				R.print();
+				Q = Q * P;
+				Q.print();
+			}
+		}
+		void print(){
+			this->A->print();
 		}
 	};
 }

@@ -35,6 +35,26 @@ int main(int argc, char * argv[]){
 
 	#pragma region Region_Matrix
 	{
+		double d[3][2] ={
+						{1.0,2.0},
+						{2.1,3.4},
+						{4.0,2.0}
+						};
+		betacore::Matrix<double> d1(d);				
+		betacore::Matrix<double> d2(d);
+		d2.print();
+		d2+= d2;
+		d2.print();
+		d2-=d1;
+		d2.print();
+		d2=d2+d2;
+		d2.print();
+		d2=d2-d1;
+		d2.print();
+		d1.transpose();
+		d2*=d1;
+		d2.print();
+		std::cout<<"done with matrix" <<std::endl;
 		// betacore::Matrix<double> matrix(3);
 		// std::cout<<"___________________"<<std::endl;
 		// std::cout<<"Matrix:["<<matrix.row_count()<<","<<matrix.col_count()<<"]"<<std::endl;
