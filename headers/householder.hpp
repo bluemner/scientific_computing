@@ -61,11 +61,15 @@ namespace betacore{
 				T alpha;
 				Matrix<T> v(this->_rows,1);
 				Matrix<T> vt;
+				Matrix<T> vtu;
 				Matrix<T> u(this->_rows,1);
-				Matrix<T> Identity((const unsigned int) this->_rows);
+				Matrix<T> I((const unsigned int) this->_rows);
 				Matrix<T> P(this->_rows, this->_rows);
 				Matrix<T> Q((const unsigned int) this->_rows);
 				for ( unsigned int i = 0 ; i < this->_cols ; i++){
+					std::cout<<"____________________________________________________________________________"<<"\n";
+					std::cout<<"\tIteration:\t"<< i<<"\n";
+					std::cout<<"____________________________________________________________________________"<<"\n";
 					u.erase();
 					v.erase();
 					
@@ -78,42 +82,43 @@ namespace betacore{
 					}
 					u.print();
 					alpha = u[i] < 0 ? (T) sqrt(magnitude) : (T) -sqrt(magnitude);
-					magnitude= (T) 0.0;
 					
 					for(unsigned int j=i; j< this->_rows; j++){
-						T temp  = (j==i)? u.at(j,0)+ alpha : u.at(j,0);
+						T temp  = (j==i)? u.at(j,0) - alpha : u.at(j,0);
 						v.set(j,0,temp);
-						magnitude += v.at(j,0) * v.at(j,0);
 					}
-					magnitude = sqrt(magnitude);
-					
-					if(magnitude == 0){
-						continue;
-					}
-
-					for(size_t j=i; j < this->_rows; j++){
-						T temp = (T)  v.at(j,0) / magnitude;
-						v.set(j,0, temp);
-					}
-					std::cout<<"____________________________________________________________________________"<<"\n";
-					std::cout<<"\tIteration:\t"<< i<<"\n";
-					std::cout<<"____________________________________________________________________________"<<"\n";
+					v.print();
+					u.print();
+		
 
 					vt = v;
 					vt.print();
 					vt.transpose();
 					vt.print();
-					vt = (v*vt);
-					vt.print();
-					vt = vt *2.0;
-					vt.print();
-					
-					P = Identity - vt;
+					vtu = (vt*u);
+					std::cout<<"vtu:\n";
+					vtu.print();
+					//vt = (vt*v);
+					//std::cout<<"vvt:\n";
+					//vt.print();
+					//T k = vtu.at(0,0) / vt.at(0,0) *2.0;
+					//vt.print();
+					vt = v * vt;
+					//vt = vt *2;
+					P = I - vt;
+					//P = u - v;
+					std::cout<<"P:\n";
 					P.print();
+					std::cout<<"R:\n";
+					R->print();
 					R = P * R;
+					std::cout<<"R':\n";
 					R->print();
 					Q = Q * P;
+					std::cout<<"Q:\n";
 					Q.print();
+
+					std::cout<<"\n";
 				}
 			}
 			void print(){
