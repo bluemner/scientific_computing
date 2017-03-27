@@ -59,8 +59,9 @@ namespace betacore{
 			void run(){
 				T magnitude;
 				T alpha;
-				Matrix<T> v(A.row_count(),1);
-				Matrix<T> u(A.row_count(),1);
+				Matrix<T> v(this->_rows,1);
+				Matrix<T> vt;
+				Matrix<T> u(this->_rows,1);
 				Matrix<T> Identity((const unsigned int) this->_cols);
 				Matrix<T> P(this->_rows, this->_rows);
 				Matrix<T> Q(this->_rows, this->_rows);
@@ -71,7 +72,7 @@ namespace betacore{
 					//GET ALPHA
 					magnitude = (T) 0.0;
 					for(unsigned int j=0; j < this->_rows; j++){
-						u[j] = R.at(i,j);
+						u[j] = R->at(i,j);
 						magnitude += (T) u[j]*u[j];
 					}
 					
@@ -90,10 +91,13 @@ namespace betacore{
 					for(size_t j=i; j < this->_rows; j++){
 						v[j] /= magnitude;
 					}
-					P = Identity - (v*v.transpose()) * 2.0;
+					
+					vt = v;
+					vt.transpose();
+					P = Identity - (v*vt) * 2.0;
 					P.print();
-					R = P * R;
-					R.print();
+					(*R) = P * (*R);
+					R->print();
 					Q = Q * P;
 					Q.print();
 				}

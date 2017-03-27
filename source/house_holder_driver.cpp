@@ -32,5 +32,6 @@ int main(int argc, char * argv[]){
 						{ 1.0,  6.0, 4.0, -3.0}
 					};
 	betacore::Householder<double> HH(data);
+	HH.run();
 	return 0;
 }

@@ -86,8 +86,8 @@ class Matrix
 	 */
 	Matrix(){
 		this->M = NULL;
-		this->rows = 0;
-		this->cols = 1 ;
+		this->_rows = 0;
+		this->_cols = 0;
 	}
 	/**
 	 * @desc Creates an instace of MxN Matrix of Type <T>
@@ -207,6 +207,15 @@ class Matrix
 	}
 
 	T at(size_t &row, size_t &col){
+		if( (unsigned int) row > this->_rows -1 ){
+			throw MatrixException();
+		}
+		if( (unsigned int) col >  this->_cols -1){
+			throw MatrixException();
+		}
+		return this->M[row][col];
+	}
+	 T at(unsigned int row , unsigned int col){
 		if( (unsigned int) row > this->_rows -1 ){
 			throw MatrixException();
 		}
@@ -336,11 +345,11 @@ class Matrix
 		}
 
 		Matrix& operator*(const T scale){
-			Matrix<T> A(this->_rows, this->_cols);
+			Matrix<T> * A = new Matrix<T>(this->_rows, this->_cols);
 			for (int j = 0; j < this->_rows; j++)
 				for (int i = 0; i < this->_cols; i++)
-					A[j][i] = M[j][i] * scale;
-			return A;
+					A->M[j][i] = M[j][i] * scale;
+			return *A;
 		}
 
 		Matrix& operator*=(const Matrix& rhs){
@@ -371,7 +380,7 @@ class Matrix
 		}
 
 		T& operator[](int row){
-			this->_M[row];
+			this->M[row];
 		}
 
 		Matrix& operator=(const Matrix& rhs) {
