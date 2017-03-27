@@ -85,9 +85,9 @@ class Matrix
 	 * Create null matrix
 	 */
 	Matrix(){
-		this->M = NULL;
-		this->_rows = 0;
-		this->_cols = 0;
+		this->M = nullptr;
+		this->_rows = -1;
+		this->_cols = -1;
 	}
 	/**
 	 * @desc Creates an instace of MxN Matrix of Type <T>
@@ -106,6 +106,8 @@ class Matrix
 		this->M = new T*[rows];
 		for(size_t i=0; i<rows;++i)
 			this->M[i]=new T[cols];
+		this->_rows = rows;
+		this->_cols = cols;
 	}
 	/*
 	 * @desc Create identity matrix
@@ -122,10 +124,10 @@ class Matrix
 	 */
 	~Matrix(){
 		for(int i=0; i< this->_rows; i++){
-			delete this->M[i];
+			delete [] this->M[i];
 			this->M[i]=nullptr;
 		}
-		delete this->M;
+		delete [] this->M;
 		this->M = nullptr;
 		this->_rows =0;
 		this->_cols =0;
@@ -185,8 +187,8 @@ class Matrix
 			}
 		}
 		for (unsigned int j =0; j< this->_cols; ++j)
-			 delete this->M[j];
-		delete this->M;
+			 delete [] this->M[j];
+		delete [] this->M;
 		this->M = transpose;
 		auto temp = this->_rows;
 		this->_rows = this->_cols;
@@ -226,9 +228,23 @@ class Matrix
 	}
 
 	void set(size_t row, size_t col, T val){
+		if( (unsigned int) row > this->_rows -1 ){
+			throw MatrixException();
+		}
+		if( (unsigned int) col >  this->_cols -1){
+			throw MatrixException();
+		}
 		this->M[row][col]= val;
 	}
-
+	void set(unsigned int  row, unsigned int col, T val){
+		if( (unsigned int) row > this->_rows -1 ){
+			throw MatrixException();
+		}
+		if( (unsigned int) col >  this->_cols -1){
+			throw MatrixException();
+		}
+		this->M[row][col]= val;
+	}
 	template<size_t size>
 	void set(size_t row,T (&A)[size] ){
 			this->M[row]= A;
@@ -276,10 +292,10 @@ class Matrix
 	//
 	//
 	//
-	void zero(){
+	void erase(){
 		for(unsigned int i=0; i< this->_rows; ++i){
-			for(unsigned int j=0; j< this->_rows; ++j){
-				this->M[i][j]=0;
+			for(unsigned int j=0; j< this->_cols; ++j){
+				this->M[i][j]= (T)0.0;
 			}
 		}
 	}
@@ -295,8 +311,9 @@ class Matrix
 			for (unsigned int j = 0; j < this->_rows; j++)
 				for (int i = 0; i < this->_cols; i++)
 					R[j][i] = M[j][i] + rhs.M[j][i];
-
-			delete this->M;
+			for (unsigned int j =0; j< this->_cols; ++j)
+				delete [] this->M[j];
+			delete [] this->M;
 			this->M = R;
 			return * this;
 		}
@@ -325,22 +342,29 @@ class Matrix
 			for (unsigned int j = 0; j < this->_rows; j++)
 				for (int i = 0; i < this->_cols; i++)
 					R[j][i] = M[j][i] - rhs.M[j][i];
-
-			delete this->M;
+			for (unsigned int j =0; j< this->_cols; ++j)
+				delete [] this->M[j];
+			delete [] this->M;
 			this->M = R;
 			return * this;
 		}
 
 		Matrix& operator-(const Matrix& rhs){
+			if(rhs._cols != this->_cols || rhs._rows != this->_rows){
+				std::cerr<<  "You cant subtract two diffent size matrices"<< "\n";
+				throw MatrixException();
+			}
 			Matrix<T> * R = new Matrix<T>(this->_rows,this->_cols);
 			R->_cols = rhs._cols;
 			R->_rows = rhs._rows;
 			// for(unsigned int i=0; i < this->_rows; ++i){
 			// 	R[i]= new T[this->_cols];
 			// }
-			for (unsigned int j = 0; j < this->_rows; j++)
-				for (unsigned int i = 0; i < this->_cols; i++)
-					R->M[j][i] = M[j][i] - rhs.M[j][i];
+			for (unsigned int i = 0; i < this->_rows; i++){
+				for (unsigned int j = 0; j < this->_cols; j++){
+					R->M[i][j] = this->M[i][j] - rhs.M[i][j];
+				}
+			}
 			return *R;
 		}
 
@@ -374,24 +398,62 @@ class Matrix
 			this->M = R;
 			return *this;
 		}
-		friend Matrix operator*(Matrix lhs, const Matrix& rhs){
-			lhs *= rhs; // reuse compound assignment
-			return lhs; // return the result by value (uses move constructor)
-		}
+		Matrix& operator*(const Matrix& rhs){
+			Matrix<T> * R = new Matrix<T>(this->_rows,rhs._cols);
+			R->_cols = rhs._cols;
+			R->_rows = this->_rows;
 
+			for(unsigned int i=0; i < this->_rows; ++i){
+				R->M[i]= new T[rhs._cols];
+			}
+			for(unsigned int i= 0; i< this->_rows; i++ ){
+				for(unsigned int j= 0; j< rhs._cols; j++ ){
+					R->M[i][j]=(T)0.0;
+					for(unsigned int k = 0; k< this->_cols; k++ ){
+						R->M[i][j] += M[i][k] * rhs.M[k][j];
+					}
+				}
+			}
+			return *R;
+		}
+		Matrix* operator*(const Matrix *rhs){
+			Matrix<T> * R = new Matrix<T>(this->_rows,rhs->_cols);
+			R->_cols = rhs->_cols;
+			R->_rows = this->_rows;
+
+			for(unsigned int i=0; i < this->_rows; ++i){
+				R->M[i]= new T[rhs->_cols];
+			}
+			for(unsigned int i= 0; i< this->_rows; i++ ){
+				for(unsigned int j= 0; j< rhs->_cols; j++ ){
+					R->M[i][j]=(T)0.0;
+					for(unsigned int k = 0; k< this->_cols; k++ ){
+						R->M[i][j] += M[i][k] * rhs->M[k][j];
+					}
+				}
+			}
+			return R;
+		}
 		T& operator[](int row){
-			this->M[row];
+			return *this->M[row];
 		}
 
 		Matrix& operator=(const Matrix& rhs) {
-			if (this->_rows * this->_cols != rhs._rows * rhs._cols) {
-				delete this->M;
+			if (this->_rows * this->_cols != rhs._rows * rhs._cols || this->M == nullptr) {
+				if(this->M != nullptr){
+						for(int i=0; i< this->_rows; i++){
+						delete [] this->M[i];
+						this->M[i]=nullptr;
+					}
+					delete [] this->M;
+				}
+				this->_rows = rhs._rows;
+				this->_cols = rhs._cols;
 				this->M = new T*[this->_rows];
 				for(unsigned int i=0; i < this->_rows; ++i){
 					this->M[i] = new T[this->_cols];
 				}
-				this->_rows = rhs._rows;
-				this->_cols = rhs._cols;
+				
 			}
 			for (unsigned int i = 0; i < _rows; i++){
 				for (unsigned int j = 0; j < _cols; j++){
@@ -399,6 +461,31 @@ class Matrix
 				}
 			}
 			return *this;
+		}
+
+		Matrix* operator=(const Matrix* rhs) {
+			if (this->_rows * this->_cols != rhs->_rows * rhs->_cols || this->M == nullptr) {
+				if(this->M != nullptr){
+						for(int i=0; i< this->_rows; i++){
+						delete [] this->M[i];
+						this->M[i]=nullptr;
+					}
+					delete [] this->M;
+				}
+				this->_rows = rhs->_rows;
+				this->_cols = rhs->_cols;
+				this->M = new T*[this->_rows];
+				for(unsigned int i=0; i < this->_rows; ++i){
+					this->M[i] = new T[this->_cols];
+				}
+				
+			}
+			for (unsigned int i = 0; i < _rows; i++){
+				for (unsigned int j = 0; j < _cols; j++){
+					this->M[i][j] = rhs->M[i][j];
+				}
+			}
+			return this;
 		}
 	#pragma endregion Region_operator
 };

@@ -1,16 +1,17 @@
 /********************************************************
-***IMPORTANT NOTE***
-If you have problems with the provided sample code,
-part of the reason might be due to the function "fopen".
-Please try changing "r/w" to "rb/wb" or the other way
-when you use this function.
+	***IMPORTANT NOTE***
+	If you have problems with the provided sample code,
+	part of the reason might be due to the function "fopen".
+	Please try changing "r/w" to "rb/wb" or the other way
+	when you use this function.
 
-Note: this file is not part of the betacore project(s) work and is not bound by the same licence
+Note: this file is not part of the betacore project(s) work
+	  and is not bound by the same licence
 
 LICENSE: University of Wisconsin - Milwaukee Proprietary
 *********************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>

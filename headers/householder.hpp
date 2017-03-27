@@ -27,7 +27,7 @@
 #include "./matrix.hpp"
 #endif
 
-#include <math.h>
+#include <cmath>
 
 namespace betacore{
 	struct Householder_Exception : public std::exception {
@@ -62,25 +62,28 @@ namespace betacore{
 				Matrix<T> v(this->_rows,1);
 				Matrix<T> vt;
 				Matrix<T> u(this->_rows,1);
-				Matrix<T> Identity((const unsigned int) this->_cols);
+				Matrix<T> Identity((const unsigned int) this->_rows);
 				Matrix<T> P(this->_rows, this->_rows);
-				Matrix<T> Q(this->_rows, this->_rows);
+				Matrix<T> Q((const unsigned int) this->_rows);
 				for ( unsigned int i = 0 ; i < this->_cols ; i++){
-					u.zero();
-					v.zero();
+					u.erase();
+					v.erase();
 					
 					//GET ALPHA
 					magnitude = (T) 0.0;
-					for(unsigned int j=0; j < this->_rows; j++){
-						u[j] = R->at(i,j);
-						magnitude += (T) u[j]*u[j];
+					for(unsigned int j=i; j < this->_rows; j++){
+						auto temp =this-> R->at(j,i);
+						u.set(j,0,temp );
+						magnitude += (T) u.at(j,0)*u.at(j,0);
 					}
-					
-					alpha = u[i] < 0 ? magnitude : -magnitude;
+					u.print();
+					alpha = u[i] < 0 ? (T) sqrt(magnitude) : (T) -sqrt(magnitude);
 					magnitude= (T) 0.0;
+					
 					for(unsigned int j=i; j< this->_rows; j++){
-						v[j]= j==i? u[j]+ alpha : u[j];
-						magnitude += v[j] * v[j];
+						T temp  = (j==i)? u.at(j,0)+ alpha : u.at(j,0);
+						v.set(j,0,temp);
+						magnitude += v.at(j,0) * v.at(j,0);
 					}
 					magnitude = sqrt(magnitude);
 					
@@ -89,21 +92,32 @@ namespace betacore{
 					}
 
 					for(size_t j=i; j < this->_rows; j++){
-						v[j] /= magnitude;
+						T temp = (T)  v.at(j,0) / magnitude;
+						v.set(j,0, temp);
 					}
-					
+					std::cout<<"____________________________________________________________________________"<<"\n";
+					std::cout<<"\tIteration:\t"<< i<<"\n";
+					std::cout<<"____________________________________________________________________________"<<"\n";
+
 					vt = v;
+					vt.print();
 					vt.transpose();
-					P = Identity - (v*vt) * 2.0;
+					vt.print();
+					vt = (v*vt);
+					vt.print();
+					vt = vt *2.0;
+					vt.print();
+					
+					P = Identity - vt;
 					P.print();
-					(*R) = P * (*R);
+					R = P * R;
 					R->print();
 					Q = Q * P;
 					Q.print();
 				}
 			}
 			void print(){
-			
+				A->print();
 			}
 	};
 }
