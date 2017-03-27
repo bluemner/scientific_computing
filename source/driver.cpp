@@ -54,6 +54,17 @@ int main(int argc, char * argv[]){
 		d1.transpose();
 		d2*=d1;
 		d2.print();
+			double _d[2][1] ={
+						{2.0},
+						{-1},
+					
+						};
+		betacore::Matrix<double> d3(_d);
+		betacore::Matrix<double> d4(_d);
+		d4.transpose();
+		d3*=d4;
+		//d3/=d3;
+		d3.print();
 		std::cout<<"done with matrix" <<std::endl;
 		// betacore::Matrix<double> matrix(3);
 		// std::cout<<"___________________"<<std::endl;

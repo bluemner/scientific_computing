@@ -31,75 +31,76 @@
 
 namespace betacore{
 	struct Householder_Exception : public std::exception {
-	const char * what () const throw () {
-		return "Householder  Exception";
-	}
+		const char * what () const throw () {
+			return "Householder  Exception";
+		}
+	};
 	template<typename T>
 	class Householder{
-	private:
-
-	public:
-		Matrix<T> * A;
-		Matrix<T> * R;
-		unsigned int _rows;
-		unsigned int _cols;
-
-		template<size_t rows, size_t cols>
-		Householder(T (&A)[rows][cols]){
-			this->A = new Matrix<T>(A);
-			this->R = new Matrix<T>(A);
-			this->_rows = rows;
-			this->_cols = cols;
-		}
-		~Householder(){
-			delete A;
-			A = nullptr;
-			delete V;
-			V = nullptr;
-		}
-		void run(){
-			T magnitude;
-			T alpha;
-			Matrix<T> v(A.row_count(),1);
-			Matrix<T> u(A.row_count(),1);
-			Matrix<T> Identity((const unsigned int) cols);
-			for ( unsigned int i = 0 ; i < this->cols ; i++){
-				zero(u);
-				zero(v);
-				
-				//GET ALPHA
-				magnitude = (T) 0.0;
-				for(unsigned int j=0; j < this->rows; j++){
-					u[j] = R.at(i,j);
-					magnitude += (T) u[j]*u[j];
-				}
-				
-				alpha = u[i] < 0 ? magnitude : -magnitude;
-				magnitude= (T) 0.0;
-				for(unsigned int j=i; j< this->rows; j++){
-					v[j]= j==i? u[j]+ alpha : u[j];
-					magnitude += v[j] * v[j];
-				}
-				magnitude = sqrt(magnitude);
-				
-				if(magnitude == 0){
-					continue;
-				}
-
-				for(size_t j=i; j < this->rows; j++){
-					v[j] /= magnitude;
-				}
-				P = I - (v*v.transpose()) * 2.0;
-				P.print();
-				R = P * R;
-				R.print();
-				Q = Q * P;
-				Q.print();
+		private:
+			Matrix<T> * A;
+			Matrix<T> * R;
+			unsigned int _rows;
+			unsigned int _cols;
+		public:
+			template<size_t rows, size_t cols>
+			Householder(T (&A)[rows][cols]){
+				this->A = new Matrix<T>(A);
+				this->R = new Matrix<T>(A);
+				this->_rows = rows;
+				this->_cols = cols;
 			}
-		}
-		void print(){
-			this->A->print();
-		}
+			~Householder(){
+				delete A;
+				A = nullptr;
+				delete R;
+				R = nullptr;
+			}
+			void run(){
+				T magnitude;
+				T alpha;
+				Matrix<T> v(A.row_count(),1);
+				Matrix<T> u(A.row_count(),1);
+				Matrix<T> Identity((const unsigned int) this->_cols);
+				Matrix<T> P(this->_rows, this->_rows);
+				Matrix<T> Q(this->_rows, this->_rows);
+				for ( unsigned int i = 0 ; i < this->_cols ; i++){
+					u.zero();
+					v.zero();
+					
+					//GET ALPHA
+					magnitude = (T) 0.0;
+					for(unsigned int j=0; j < this->_rows; j++){
+						u[j] = R.at(i,j);
+						magnitude += (T) u[j]*u[j];
+					}
+					
+					alpha = u[i] < 0 ? magnitude : -magnitude;
+					magnitude= (T) 0.0;
+					for(unsigned int j=i; j< this->_rows; j++){
+						v[j]= j==i? u[j]+ alpha : u[j];
+						magnitude += v[j] * v[j];
+					}
+					magnitude = sqrt(magnitude);
+					
+					if(magnitude == 0){
+						continue;
+					}
+
+					for(size_t j=i; j < this->_rows; j++){
+						v[j] /= magnitude;
+					}
+					P = Identity - (v*v.transpose()) * 2.0;
+					P.print();
+					R = P * R;
+					R.print();
+					Q = Q * P;
+					Q.print();
+				}
+			}
+			void print(){
+			
+			}
 	};
 }
 #endif

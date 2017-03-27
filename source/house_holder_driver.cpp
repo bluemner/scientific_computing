@@ -24,16 +24,13 @@
 #include "../headers/matrix.hpp"
 #include "../headers/householder.hpp"
 int main(int argc, char * argv[]){
-	double data[][] = {
-						{ 2,  1, 3, 5},
-						{-1,  0, 7, 1},
-						{ 0, -1, -1, 3},
-						{-3,  7, 4, 3},
-						{ 1,  6, 4, -3}
+	double data[5][4] = {
+						{ 2.0,  1.0, 3.0, 5.0},
+						{-1.0,  0.0, 7.0, 1.0},
+						{ 0.0, -1.0, -1.0, 3.0},
+						{-3.0,  7.0, 4.0, 3.0},
+						{ 1.0,  6.0, 4.0, -3.0}
 					};
-	betacore::Householder<T>(data){
-			this->A = new Matrix<T>(A);
-			this->R = new Matrix<T>(A);
-		}
+	betacore::Householder<double> HH(data);
 	return 0;
 }
