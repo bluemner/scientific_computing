@@ -11,6 +11,17 @@
             "cwd": "${workspaceRoot}",
             "environment": [],
             "externalConsole": false
+        },
+        {
+            "name": "Driver (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/driver.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false
         }
 
     ]

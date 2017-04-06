@@ -16,7 +16,7 @@ LICENSE: University of Wisconsin - Milwaukee Proprietary
 #include <math.h>
 #include <malloc.h>  
 #include <memory.h>
-
+#include <linear_system.hpp>
 #define max(x, y) ((x>y) ? (x):(y))
 #define min(x, y) ((x<y) ? (x):(y))
 
@@ -52,8 +52,19 @@ int main(int argc, char **argv)
   ReadPGM(fp);
  
   // your application here
-  
-   
+  for (j=0; j<ydim; j++){
+    for (i=0; i<xdim; i++) {
+      //3x3 
+      //  . - . - .
+      //  |   |   | 
+      //  . - . - .
+      //  |   |   |
+      //  . - . - .
+      printf("", "");
+
+    }
+  }
+
   // As an example, let's just make an inversion of the input image.
   for (j=0; j<ydim; j++){
     for (i=0; i<xdim; i++) {

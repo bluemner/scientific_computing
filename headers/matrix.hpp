@@ -38,49 +38,49 @@ struct MatrixException : public std::exception {
 template <typename T>
 class Matrix
  {
-  private:
-	T **M;
-	unsigned int _rows;
-	unsigned int _cols;
-	template<size_t rows, size_t cols>
-	void copy(T (&M)[rows][cols] ){
-		this->M = new T*[rows];
-		this->_rows = rows;
-		this->_cols = cols;
-		for(int i = 0; i < rows; ++i)
-			this->M[i] = new T[cols];
-		for(size_t i = 0; i < rows; ++i)
-		{
-			for(size_t j = 0; j < cols; ++j){
-				this->M[i][j] = M[i][j];
+  	private:
+		T **M;
+		unsigned int _rows;
+		unsigned int _cols;
+		template<size_t rows, size_t cols>
+		void copy(T (&M)[rows][cols] ){
+			this->M = new T*[rows];
+			this->_rows = rows;
+			this->_cols = cols;
+			for(int i = 0; i < rows; ++i)
+				this->M[i] = new T[cols];
+			for(size_t i = 0; i < rows; ++i)
+			{
+				for(size_t j = 0; j < cols; ++j){
+					this->M[i][j] = M[i][j];
+				}
 			}
 		}
-	}
-	void copy(T** M,const int rows, const int cols){
-		this->_rows=rows;
-		this->_cols=cols;
-		this->M =new T*[rows];
-		for(int i=0; i<rows;++i)
-			this->M[i]=new T[cols];
-		for(size_t i =0; i< rows; ++i)
-		{
-			for(size_t j=0; j<cols; ++j){
-				this->M[i][j] = M[i][j];
+		void copy(T** M,const int rows, const int cols){
+			this->_rows=rows;
+			this->_cols=cols;
+			this->M =new T*[rows];
+			for(int i=0; i<rows;++i)
+				this->M[i]=new T[cols];
+			for(size_t i =0; i< rows; ++i)
+			{
+				for(size_t j=0; j<cols; ++j){
+					this->M[i][j] = M[i][j];
+				}
 			}
 		}
-	}
-	T** identity(unsigned int size){
-		T** t  =new T*[size];
-		for(size_t i=0; i<size;++i)
-			t[i]=new T[size];
-		for(size_t i=0; i< size; ++i){
-			for(size_t j=0; j < size; ++j){
-				t[i][j]= (i==j)?1:0;
+		T** identity(unsigned int size){
+			T** t  =new T*[size];
+			for(size_t i=0; i<size;++i)
+				t[i]=new T[size];
+			for(size_t i=0; i< size; ++i){
+				for(size_t j=0; j < size; ++j){
+					t[i][j]= (i==j)?1:0;
+				}
 			}
+			return t;
 		}
-		return t;
-	}
-  public:
+	public:
   	/*
 	 * Create null matrix
 	 */

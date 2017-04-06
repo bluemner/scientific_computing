@@ -53,3 +53,9 @@ set file_name=house_holder_driver
 set compilerflags=/Fo.\bin\ /Od /Zi /EHsc 
 set linkerflags=/OUT:bin\%file_name%.exe
 cl.exe %compilerflags% source/%file_name%.cpp /link %linkerflags%
+
+echo building ReadWritePGM
+set file_name=ReadWritePGM
+set compilerflags=/Fo.\bin\ /Od /Zi /EHsc 
+set linkerflags=/OUT:bin\%file_name%.exe
+cl.exe %compilerflags% source/%file_name%.cpp /link %linkerflags%
