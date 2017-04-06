@@ -12,11 +12,19 @@
             "environment": [],
             "externalConsole": false
         },
+<<<<<<< HEAD
         {
             "name": "Driver (Windows)",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/bin/driver.exe",
+=======
+         {
+            "name": "Driver HH (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/house_holder_driver.exe",
+>>>>>>> 4da56b2d74482efea9cdd13609461c85b7e78afe
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
