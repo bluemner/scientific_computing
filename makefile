@@ -27,11 +27,14 @@ FLAGS =-W -ggdb -std=c++11
 SOURCE_DIR = source/
 HEADERS_DIR = headers/
 
-all: driver house_holder_driver
+all: driver house_holder_driver ReadWritePGM
 
 driver: $(SOURCE_DIR)driver.cpp | make_dir
 	$(COMPILER) $(FLAGS) $(HEADERS_DIR)matrix.hpp $(SOURCE_DIR)driver.cpp  -o $(OUTPUT_DIR)/driver.o
 house_holder_driver: $(SOURCE_DIR)house_holder_driver.cpp | make_dir
 	$(COMPILER) $(FLAGS) $(HEADERS_DIR)matrix.hpp $(SOURCE_DIR)house_holder_driver.cpp  -o $(OUTPUT_DIR)/house_holder_driver.o
+ReadWritePGM: $(SOURCE_DIR)ReadWritePGM.cpp | make_dir
+	$(COMPILER) $(FLAGS) $(HEADERS_DIR)matrix.hpp $(SOURCE_DIR)ReadWritePGM.cpp  -o $(OUTPUT_DIR)/ReadWritePGM.o
+
 make_dir:
 	mkdir -p $(OUTPUT_DIR) | mkdir -p data

@@ -89,6 +89,42 @@ class Matrix
 		this->_rows = -1;
 		this->_cols = -1;
 	}
+	Matrix(Matrix &m){
+		this->M = nullptr;
+		// this->_rows = -1;
+		// this->_cols = -1;
+		// *this = m;
+		int rows = m._rows;
+		int cols = m._cols;
+
+		this->M = new T*[rows];
+		for(size_t i=0; i<rows;++i)
+			this->M[i]=new T[cols];
+		for(size_t i = 0; i < rows; ++i)
+		{
+			for(size_t j = 0; j < 1; ++j){
+				this->M[i][j] = m.M[i][j];
+			}
+		}
+		this->_rows = rows;
+		this->_cols = cols;
+	}
+	/**
+	 * @desc
+	 * @param 
+	 */
+	template<size_t rows>
+	Matrix(T (&matrix) [rows]){
+			this->M = new T*[rows];
+			this->_rows = rows;
+			this->_cols = 1;
+			for(int i = 0; i < rows; ++i)
+				this->M[i] = new T[1];
+			for(size_t i = 0; i < rows; ++i)
+			{
+				this->M[i][0] =matrix[i];
+			}
+	}
 	/**
 	 * @desc Creates an instace of MxN Matrix of Type <T>
 	 * @param {T} matrix with type <T> and size = rows x cols
@@ -98,7 +134,7 @@ class Matrix
 		copy(matrix);
 	}
 
-/*
+	/*
 	 * @desc Create identity matrix
 	 * @param {int} size Create identity matrix of M x M st. M = Size
 	 */
@@ -129,6 +165,7 @@ class Matrix
 		}
 		delete [] this->M;
 		this->M = nullptr;
+					
 		this->_rows =0;
 		this->_cols =0;
 	}
@@ -248,6 +285,45 @@ class Matrix
 	template<size_t size>
 	void set(size_t row,T (&A)[size] ){
 			this->M[row]= A;
+	}
+	
+	void lu( Matrix<T> &L, Matrix<T> &U){
+		int size = this->_rows;
+		size_t i=0;
+		size_t j=0;
+		size_t k=0;
+
+		for (i = 0; i < size; i++)
+		{
+			for (j = 0; j < size; j++)
+			{
+				if (j < i)
+					L.M[j][i] = 0;
+				else
+				{
+					L.M[j][i] = this->M[j][i];
+					for (k = 0; k < i; k++)
+					{
+						L.M[j][i] = L.M[j][i] - L.M[j][k] * U.M[k][i];
+					}
+				}
+			}
+			for (j = 0; j < size; j++)
+			{
+				if (j < i)
+					U.M[i][j] = 0;
+				else if (j == i)
+					U.M[i][j] = 1;
+				else
+				{
+					U.M[i][j] = this->M[i][j] / L.M[i][i];
+					for (k = 0; k < i; k++)
+					{
+						U.M[i][j] = U.M[i][j] - ((L.M[i][k] * U.M[k][j]) / L.M[i][i]);
+					}
+				}
+			}
+		}
 	}
 
 	template <size_t size>
@@ -441,7 +517,7 @@ class Matrix
 		Matrix& operator=(const Matrix& rhs) {
 			if (this->_rows * this->_cols != rhs._rows * rhs._cols || this->M == nullptr) {
 				if(this->M != nullptr){
-						for(int i=0; i< this->_rows; i++){
+					for(int i=0; i< this->_rows; i++){
 						delete [] this->M[i];
 						this->M[i]=nullptr;
 					}

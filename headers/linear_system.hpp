@@ -31,10 +31,11 @@
 #include <iomanip>
 namespace betacore{
 	struct Linear_System_Exception : public std::exception {
-   const char * what () const throw () {
-      return "Linear System Exception";
-   }
-};
+		const char * what () const throw () {
+			return "Linear System Exception";
+		}
+	};
+
 	template <typename T>
 	class Linear_System{
 		private:
@@ -139,6 +140,27 @@ namespace betacore{
 				this->L = new Matrix<T>(L);
 				this->U = new Matrix<T>(U);
 			}
+			
+			Linear_System(Matrix<T> &A, Matrix<T> &x,Matrix<T> &b){
+				
+				int size= A.row_count();
+				int col = A.col_count();
+				Matrix<T> _L(size, col);
+				Matrix<T> _U(size, col);
+				A.lu(_L,_U);
+				this->L = new Matrix<T>(_L);
+				this->U = new Matrix<T>(_U);
+				this->A = new Matrix<T>(A);
+				this->size = A.row_count();
+				this->x = new T[size];
+				this->b = new T[size];
+				size_t i=0;
+				//vectors have the same size;
+				for(; i< A.row_count(); i++){
+					this->x[i] = x.at(i,0);//[i];
+					this->b[i] = b.at(i,0);
+				}
+			}
 			~Linear_System(){
 				delete this->A;
 				this->A = nullptr;
@@ -173,6 +195,25 @@ namespace betacore{
 					for (i=j+1 ; i<(int)n  ; i++  ){
 						size_t ui = (size_t) i;
 						this->b[i]= this->b[i] -  this->A->at(ui,uj) * this->x[j];
+					}
+				}
+			}
+
+			void forward_substitution_l(){
+				int i=0;
+				int j=0;
+				//this->L->print();
+				size_t n = this->size;
+				for ( j=0; j < n ; j++ ){
+					size_t uj = (size_t) j;
+					T Ajj=this->L->at(uj,uj);
+					if (Ajj  == 0){
+						break;
+					}
+					this->x[j] = this->b[j] / Ajj;
+					for (i=j+1 ; i<(int)n  ; i++  ){
+						size_t ui = (size_t) i;
+						this->b[i]= this->b[i] -  this->L->at(ui,uj) * this->x[j];
 					}
 				}
 			}
@@ -235,6 +276,13 @@ namespace betacore{
 						 T a3 = this->x[3]*(x-XL)*(x-XL)*(x-XR);
 						 T total = a0 + a1 + a2 + a3;
 				return (T) (total);
+			}
+			void get_x(Matrix<T> &x){
+				Matrix<T> mm(this->size,1);
+				for(size_t i=0; i< this->size; i++){
+					x.set(i,0,this->x[i]);
+				} 
+			
 			}
 			T SL(){
 				return x[1];

@@ -12,19 +12,36 @@
             "environment": [],
             "externalConsole": false
         },
-<<<<<<< HEAD
+
         {
-            "name": "Driver (Windows)",
+            "name": "ReadWritePGM Ship (Windows)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/driver.exe",
-=======
+            "program": "${workspaceRoot}/bin/ReadWritePGM.exe",
+                   "args": ["${workspaceRoot}/data/ship.pgm","${workspaceRoot}/bin/fix5_ship.pgm"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false
+        },
+         {
+            "name": "ReadWritePGM street (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/ReadWritePGM.exe",
+                   "args": ["${workspaceRoot}/data/street.pgm","${workspaceRoot}/bin/fix2_street.pgm"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false
+        },
+
          {
             "name": "Driver HH (Windows)",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/bin/house_holder_driver.exe",
->>>>>>> 4da56b2d74482efea9cdd13609461c85b7e78afe
+
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
