@@ -9,6 +9,7 @@
 		"chrono": "cpp",
 		"xlocale": "cpp",
 		"xstring": "cpp",
-		"vector": "cpp"
+		"vector": "cpp",
+		"iostream": "cpp"
 	}
 }

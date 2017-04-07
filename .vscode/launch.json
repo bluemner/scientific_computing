@@ -18,7 +18,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/bin/ReadWritePGM.exe",
-                   "args": ["${workspaceRoot}/data/ship.pgm","${workspaceRoot}/bin/fix5_ship.pgm"],
+                   "args": ["${workspaceRoot}/data/ship.pgm","${workspaceRoot}/bin/fix9_ship.pgm"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],

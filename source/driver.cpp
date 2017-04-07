@@ -35,6 +35,16 @@ int main(int argc, char * argv[]){
 
 	#pragma region Region_Matrix
 	{
+		double d22[2][2] ={
+						{4,3.0},
+						{6,3},					
+						};
+		betacore::Matrix<double> d23(d22);
+		betacore::Matrix<double> L(2);
+		betacore::Matrix<double> U(2);
+		d23.lu(L,U);
+		L.print();
+		U.print();
 		double d[3][2] ={
 						{1.0,2.0},
 						{2.1,3.4},

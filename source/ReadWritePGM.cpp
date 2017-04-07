@@ -43,11 +43,10 @@ int main(int argc, char **argv)
 		printf("       <output_ppm>: PGM file \n");
 		exit(0);
 	}
-
-
+ 
 	/* begin reading PGM.... */
 	printf("begin reading PGM.... \n");
-	if ((fp=fopen(argv[1], "rw"))==NULL){
+	if ((fp=fopen(argv[1], "rb"))==NULL){
 		printf("read error...\n");
 		exit(0);
 	}
@@ -74,20 +73,13 @@ int main(int argc, char **argv)
 	mAT.transpose();
 	mAT.print();
 	mAP = mAT * mA;
-	
-	// T lower[6][6]={
-	//     {1.0000,0.0000,0.0000,0.0000,0.0000,0.0000},
-	//     {0.6667,1.0000,0.0000,0.0000,0.0000,0.0000},
-	//     {0.0000,0.0000,1.0000,0.0000,0.0000,0.0000},
-	//     {0.0000,0.0000,0.0000,1.0000,0.0000,0.0000},
-	//     {0.0000,0.0000,0.0000,0.0000,1.0000,0.0000},
-	//     {1.0000,0.6000,0.0000,0.0000,0.0000,1.0000}
-	
-	// };
-
-
-	// betacore::Matrix<T> mAP(lower);
-	
+ T lower[6][6]=	{{1,0,0,0,0,0},
+{0.66666666666,1,0,0,0,0},
+{0,0,1,0,0,0},
+{0,0,0,1,0,0},
+{0,0,0,0,1,0},
+{1,0.6,0,0,0,1}};
+//betacore::Matrix<T> mAP(lower);
 	mAP.print();
 	//
 	// your application here
@@ -138,18 +130,13 @@ int main(int argc, char **argv)
 		
 		betacore::Matrix<T> mB(b);
 		betacore::Matrix<T> mX(x);
-
+		
 		mB=  mAT * mB;	
-	//	mB.print();
+		// At * A  x = At * b
 		betacore::Linear_System<T> ls(mAP, mX, mB);
 		ls.forward_substitution();
-		ls.get_x(mX);
-		//mX.print();
-															//a       b        c        d      e      f
-		char value = (char) mX.at(0,0);
-	 //(char) //x[0]*i*i+x[1]*j*j+x[2]*i*j+x[3]*i+x[4]*j+x[5];
-		//   mX.at(0,0)*i*i+mX.at(1,0)*j*j+mX.at(2,0)*i*j+mX.at(3,0)*i+mX.at(4,0)*j+mX.at(5,0);
-			 	image[j*xdim+i] = value;
+		ls.get_x(mX);	
+		image[j*xdim+i] = (char) mX.at(0,0);
 		}
 	// printf("\n\n\n");
 	}
