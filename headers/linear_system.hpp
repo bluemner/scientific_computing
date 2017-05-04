@@ -42,7 +42,6 @@ namespace betacore{
 			Matrix<T> * A;
 			Matrix<T> * L;
 			Matrix<T> * U;
-
 			size_t size;
 			T* x;
 			T* b;
@@ -142,24 +141,31 @@ namespace betacore{
 			}
 			
 			Linear_System(Matrix<T> &A, Matrix<T> &x,Matrix<T> &b){
-				
+			//	A.print();
 				int size= A.row_count();
 				int col = A.col_count();
 				Matrix<T> _L(size, col);
 				Matrix<T> _U(size, col);
 				A.lu(_L,_U);
+			
+
 				this->L = new Matrix<T>(_L);
 				this->U = new Matrix<T>(_U);
+				
 				this->A = new Matrix<T>(A);
+		//		this->A->print();
 				this->size = A.row_count();
 				this->x = new T[size];
 				this->b = new T[size];
+				
 				size_t i=0;
 				//vectors have the same size;
 				for(; i< A.row_count(); i++){
-					this->x[i] = x.at(i,0);//[i];
+					this->x[i] = 0;// x.at(i,0);//[i];
 					this->b[i] = b.at(i,0);
 				}
+
+				crout();
 			}
 			~Linear_System(){
 				delete this->A;
@@ -198,7 +204,56 @@ namespace betacore{
 					}
 				}
 			}
+			void crout(){
+				this-> size;
+				this->L->erase_1();
+			//	this->A->print();
+				for(int k=0;k< this-> size; ++k){
+					for(int i=k; i<this-> size; ++i){
+						T sum=(T)0;
+						for(int p=0;p<k;++p)
+						{
+							sum+= ((T) L->at(i,p) ) *  ((T)L->at(p,k));
+							
+						}
+						T value  = A->at(i,k)-sum;
+					
+						L->set((unsigned)i,k,  value ); // not dividing by diagonals
+					}
+					for(int j=k+1;j<this-> size;++j){
+						double sum=0;
+						for(int p=0;p<k;++p)
+						{
+							sum+=L->at(k,p)*L->at(p,j);
+						}
+						L->set( (unsigned) k,j, ((A->at(k,j)-sum)/L->at(k,k)));
+					}
+				}
+			}
+			void solveCrout(){
+				T * y = new T[this->size];
+				//this->L->print();
+				for(size_t i=0;i<this-> size;++i){
+					T sum=0;
+					for(size_t k=0;k<i;++k)
+					{
+						sum+=L->at(i,k) *y[k];
+					}
+					y[i]=(b[i]-sum)/L->at(i,i);
+				}
 
+				for(int i=this->size-1; i>=0 ;--i){
+					T sum=0;
+					for(size_t k=i+1; k < this->size; ++k)
+					{
+						sum+=L->at((size_t)i,k)*this->x[k];
+					}
+					T temp = (T)y[i] - sum;
+					this->x[i]=temp; // not dividing by diagonals
+				}
+				delete y;
+				y= nullptr;
+			}
 			void forward_substitution_l(){
 				int i=0;
 				int j=0;

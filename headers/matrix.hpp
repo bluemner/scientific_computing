@@ -93,21 +93,21 @@ class Matrix
 		this->M = nullptr;
 		// this->_rows = -1;
 		// this->_cols = -1;
-		// *this = m;
+		 *this = m;
 		int rows = m._rows;
 		int cols = m._cols;
 
-		this->M = new T*[rows];
-		for(size_t i=0; i<rows;++i)
-			this->M[i]=new T[cols];
-		for(size_t i = 0; i < rows; ++i)
-		{
-			for(size_t j = 0; j < 1; ++j){
-				this->M[i][j] = m.M[i][j];
-			}
-		}
-		this->_rows = rows;
-		this->_cols = cols;
+		// this->M = new T*[rows];
+		// for(size_t i=0; i<rows;++i)
+		// 	this->M[i]=new T[cols];
+		// for(size_t i = 0; i < rows; ++i)
+		// {
+		// 	for(size_t j = 0; j < 1; ++j){
+		// 		this->M[i][j] = m.M[i][j];
+		// 	}
+		// }
+		// this->_rows = rows;
+		// this->_cols = cols;
 	}
 	/**
 	 * @desc
@@ -372,6 +372,14 @@ class Matrix
 		for(unsigned int i=0; i< this->_rows; ++i){
 			for(unsigned int j=0; j< this->_cols; ++j){
 				this->M[i][j]= (T)0.0;
+			}
+		}
+	}
+
+	void erase_1(){
+		for(unsigned int i=0; i< this->_rows; ++i){
+			for(unsigned int j=0; j< this->_cols; ++j){
+				this->M[i][j]= (T)1.0;
 			}
 		}
 	}

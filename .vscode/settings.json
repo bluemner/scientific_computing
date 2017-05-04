@@ -10,6 +10,7 @@
 		"xlocale": "cpp",
 		"xstring": "cpp",
 		"vector": "cpp",
-		"iostream": "cpp"
+		"iostream": "cpp",
+		"xlocmon": "cpp"
 	}
 }

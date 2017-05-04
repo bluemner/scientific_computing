@@ -7,8 +7,12 @@ Run: ./run.sh
 Windows 
 you need to have vs2013+ installed
 Run: build.bat
+##Image fix 
+	Images are in the bin folder under %system%_run
+	Run ReadWritePGMx [in_file] [out_file] [filter_size]
+	Filter size has to be grater then 2. (n^2 > 6 )
 
-Cubic Spline Test case
+##Cubic Spline Test case
 Input
 
 (1.00000,4.00000)

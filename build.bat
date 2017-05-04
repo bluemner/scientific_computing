@@ -59,3 +59,10 @@ set file_name=ReadWritePGM
 set compilerflags=/Fo.\bin\ /Od /Zi /EHsc 
 set linkerflags=/OUT:bin\%file_name%.exe
 cl.exe %compilerflags% source/%file_name%.cpp /link %linkerflags%
+
+
+echo building ReadWritePGMx
+set file_name=ReadWritePGMx
+set compilerflags=/Fo.\bin\ /Od /Zi /EHsc 
+set linkerflags=/OUT:bin\%file_name%.exe
+cl.exe %compilerflags% source/%file_name%.cpp /link %linkerflags%
