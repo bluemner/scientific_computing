@@ -32,7 +32,8 @@
                 "c:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/um/gl",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/um",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/ucrt"
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/ucrt",
+                "C:/Program Files (x86)/Microsoft SDKs/MPI/Include"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
@@ -41,7 +42,8 @@
                     "c:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
                     "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/um/gl",
                     "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/um",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/ucrt"
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/ucrt",
+                     "C:/Program Files (x86)/Microsoft SDKs/MPI/Include"
                 ]
             }
         }

@@ -11,6 +11,8 @@
 		"xstring": "cpp",
 		"vector": "cpp",
 		"iostream": "cpp",
-		"xlocmon": "cpp"
+		"xlocmon": "cpp",
+		"ratio": "cpp",
+		"string": "cpp"
 	}
 }

@@ -66,3 +66,14 @@ set file_name=ReadWritePGMx
 set compilerflags=/Fo.\bin\ /Od /Zi /EHsc 
 set linkerflags=/OUT:bin\%file_name%.exe
 cl.exe %compilerflags% source/%file_name%.cpp /link %linkerflags%
+
+echo if you don't have ms-mpi install it from here::
+echo https://blogs.technet.microsoft.com/windowshpc/2015/02/02/how-to-compile-and-run-a-simple-ms-mpi-program/
+
+echo building pi
+set file_name=pi
+set mpi_include="C:\Program Files (x86)\Microsoft SDKs\MPI\Include"
+set mpi_libs="C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64"
+set compilerflags=/Fo.\bin\ /Od /Zi /EHsc 
+set linkerflags=/OUT:bin\%file_name%.exe
+cl.exe %compilerflags% source/%file_name%.cpp /I%mpi_include% /DYNAMICBASE msmpi.lib /link /LIBPATH:%mpi_libs%  %linkerflags%
